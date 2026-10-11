@@ -1,0 +1,98 @@
+Data: 146314 flows x 61 features, 187 attacks (1:781); 39 whole-number features; 10 splits
+
+1. Global SHAP attribution vs the unbalanced reference (path-dependent TreeSHAP)
+  Seed control         rho 0.829 ± 0.030   Jaccard@5 0.283 ± 0.141   tau 0.664   cosine dist 0.1378
+  class_weight         rho 0.579 ± 0.033   Jaccard@5 0.100 ± 0.033   tau 0.422   cosine dist 0.3627   p(rho) 0.0010  p(J@5) 0.0039  Bonferroni x5: 0.0049 / 0.0195
+  Random Oversampling  rho 0.565 ± 0.042   Jaccard@5 0.100 ± 0.033   tau 0.412   cosine dist 0.3770   p(rho) 0.0010  p(J@5) 0.0039  Bonferroni x5: 0.0049 / 0.0195
+  SMOTE                rho 0.562 ± 0.041   Jaccard@5 0.100 ± 0.033   tau 0.410   cosine dist 0.3735   p(rho) 0.0010  p(J@5) 0.0039  Bonferroni x5: 0.0049 / 0.0195
+  Borderline-SMOTE     rho 0.562 ± 0.059   Jaccard@5 0.114 ± 0.056   tau 0.407   cosine dist 0.3649   p(rho) 0.0010  p(J@5) 0.0078  Bonferroni x5: 0.0049 / 0.0391
+  ADASYN               rho 0.534 ± 0.030   Jaccard@5 0.100 ± 0.033   tau 0.389   cosine dist 0.3895   p(rho) 0.0010  p(J@5) 0.0039  Bonferroni x5: 0.0049 / 0.0195
+
+2. Synthesis vs duplication (Random Oversampling vs SMOTE, two-sided Wilcoxon)
+  jaccard5               ROS 0.1000  SMOTE 0.1000  diff 0.0000  p = 1.000
+  spearman               ROS 0.5650  SMOTE 0.5624  diff 0.0026  p = 0.846
+  shap_cosine_distance   ROS 0.3770  SMOTE 0.3735  diff 0.0035  p = 0.432
+  shift of ROS from the noise control in rho: 0.264
+
+3. Initial TCP window sizes among the five highest-ranked features
+  balanced runs with at least one: 50 of 50; with both: 43
+  unbalanced runs (reference + seed control) with any: 0 of 20
+  Flow Duration in the top five of balanced models: 28 of 50 runs
+  most frequent top-five features of the unbalanced model: [('Fwd Packet Length Std', 8), ('Bwd IAT Total', 6), ('Bwd IAT Std', 6), ('Fwd Packet Length Max', 5), ('Max Packet Length', 4)]
+
+4. Detection quality and calibration
+  No balancing         PR-AUC 0.985 ± 0.009  F1best 0.966  MCC 0.911  Brier 0.00015  slope 1.57  obs/pred 1.03
+  Seed control         PR-AUC 0.987 ± 0.006  F1best 0.966  MCC 0.913  Brier 0.00015  slope 1.64  obs/pred 1.03
+  class_weight         PR-AUC 0.994 ± 0.005  F1best 0.979  MCC 0.964  Brier 0.00008  slope 1.18  obs/pred 1.02  p(PR-AUC > baseline) 0.0049
+  Random Oversampling  PR-AUC 0.994 ± 0.004  F1best 0.982  MCC 0.972  Brier 0.00006  slope 1.15  obs/pred 1.00  p(PR-AUC > baseline) 0.0098
+  SMOTE                PR-AUC 0.996 ± 0.002  F1best 0.983  MCC 0.973  Brier 0.00006  slope 1.24  obs/pred 0.97  p(PR-AUC > baseline) 0.0020
+  Borderline-SMOTE     PR-AUC 0.993 ± 0.004  F1best 0.973  MCC 0.960  Brier 0.00009  slope 1.34  obs/pred 1.01  p(PR-AUC > baseline) 0.0137
+  ADASYN               PR-AUC 0.996 ± 0.002  F1best 0.982  MCC 0.970  Brier 0.00006  slope 1.21  obs/pred 0.98  p(PR-AUC > baseline) 0.0029
+
+5. Generated records with values no network flow can take
+  Random Oversampling  generated 102157   records with a fractional value 0.0 %   fractional values 0.0 %
+  SMOTE                generated 102157   records with a fractional value 100.0 %   fractional values 27.7 %
+  Borderline-SMOTE     generated 102157   records with a fractional value 100.0 %   fractional values 43.4 %
+  ADASYN               generated 102156   records with a fractional value 100.0 %   fractional values 45.1 %
+  share of the minority class after SMOTE that was never observed: 99.87 %
+  SMOTE, share of generated records with a fractional value, by feature (%):
+    Flow Duration                     100.0
+    Fwd IAT Max                       100.0
+    Flow IAT Max                      100.0
+    Bwd IAT Max                        99.8
+    Fwd IAT Min                        96.6
+    Bwd IAT Min                        83.5
+    Flow IAT Min                       80.2
+    Bwd IAT Total                      79.9
+    Fwd IAT Total                      78.6
+    Total Length of Bwd Packets        61.0
+    Bwd Packet Length Max              32.5
+    Max Packet Length                  32.5
+    Total Length of Fwd Packets        22.6
+    Init_Win_bytes_backward            18.8
+    Total Backward Packets             17.7
+    Bwd Header Length                  17.7
+    Total Fwd Packets                  15.3
+    Fwd Header Length                  15.3
+    Fwd Packet Length Max              15.2
+    act_data_pkt_fwd                    8.9
+    Down/Up Ratio                       3.3
+    Destination Port                    0.0
+    Fwd Packet Length Min               0.0
+    Bwd Packet Length Min               0.0
+    Fwd PSH Flags                       0.0
+    Min Packet Length                   0.0
+    FIN Flag Count                      0.0
+    SYN Flag Count                      0.0
+    RST Flag Count                      0.0
+    PSH Flag Count                      0.0
+    ACK Flag Count                      0.0
+    URG Flag Count                      0.0
+    ECE Flag Count                      0.0
+    Init_Win_bytes_forward              0.0
+    min_seg_size_forward                0.0
+    Active Max                          0.0
+    Active Min                          0.0
+    Idle Max                            0.0
+    Idle Min                            0.0
+  packet counts [np.float64(15.3), np.float64(17.7), np.float64(8.9)]; byte totals [np.float64(22.6), np.float64(61.0), np.float64(15.3), np.float64(17.7)]; Init_Win_bytes_backward [np.float64(18.8)]; intact [np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0)]
+
+6. Interventional TreeSHAP with a background of real records
+  noise level (seed control), interventional: rho 0.847 ± 0.041   Jaccard@5 0.321
+  Random Oversampling  rho path-dep 0.565 -> interventional 0.701  p = 0.0010   Jaccard@5 interventional 0.103  p(J@5 < iv floor) 0.0078  p(rho < iv floor) 0.0010
+  SMOTE                rho path-dep 0.562 -> interventional 0.692  p = 0.0010   Jaccard@5 interventional 0.117  p(J@5 < iv floor) 0.0098  p(rho < iv floor) 0.0010
+  Borderline-SMOTE     rho path-dep 0.562 -> interventional 0.734  p = 0.0010   Jaccard@5 interventional 0.158  p(J@5 < iv floor) 0.0117  p(rho < iv floor) 0.0010
+  ADASYN               rho path-dep 0.534 -> interventional 0.730  p = 0.0010   Jaccard@5 interventional 0.229  p(J@5 < iv floor) 0.1914  p(rho < iv floor) 0.0020
+  mean shortfall below the own noise level: path-dependent 0.273, interventional 0.132  (removed 52 %)
+
+7. Local stability of LIME (VSI), one-sided Wilcoxon vs no balancing
+  No balancing        VSI 0.952   splits at 1.0: 8 of 10
+  class_weight         neighbourhood from the data at hand    VSI 0.948  p = 0.250
+  Random Oversampling  neighbourhood from the data at hand    VSI 0.770  p = 0.002
+  Random Oversampling  neighbourhood from real records        VSI 0.953  p = 0.750
+  SMOTE                neighbourhood from the data at hand    VSI 0.744  p = 0.002
+  SMOTE                neighbourhood from real records        VSI 0.962  p = 1.000
+  Borderline-SMOTE     neighbourhood from the data at hand    VSI 0.882  p = 0.062
+  Borderline-SMOTE     neighbourhood from real records        VSI 0.987  p = 1.000
+  ADASYN               neighbourhood from the data at hand    VSI 0.881  p = 0.062
+  ADASYN               neighbourhood from real records        VSI 0.976  p = 1.000

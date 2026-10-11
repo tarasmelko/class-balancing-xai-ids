@@ -1,0 +1,74 @@
+{
+ "input_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+ "rows_raw": 170366,
+ "cols_raw": 79,
+ "labels_raw": {
+  "BENIGN": 168186,
+  "Web Attack - Brute Force": 1507,
+  "Web Attack - XSS": 652,
+  "Web Attack - Sql Injection": 21
+ },
+ "dropped_constant": [
+  "Bwd PSH Flags",
+  "Fwd URG Flags",
+  "Bwd URG Flags",
+  "CWE Flag Count",
+  "Fwd Avg Bytes/Bulk",
+  "Fwd Avg Packets/Bulk",
+  "Fwd Avg Bulk Rate",
+  "Bwd Avg Bytes/Bulk",
+  "Bwd Avg Packets/Bulk",
+  "Bwd Avg Bulk Rate"
+ ],
+ "dropped_redundant": [
+  "Fwd Header Length.1",
+  "Avg Fwd Segment Size",
+  "Avg Bwd Segment Size",
+  "Subflow Fwd Packets",
+  "Subflow Bwd Packets",
+  "Subflow Fwd Bytes",
+  "Subflow Bwd Bytes"
+ ],
+ "cols_after_feature_cleanup": 62,
+ "rows_with_inf": 135,
+ "rows_with_nan": 20,
+ "rows_impossible_negative": 263,
+ "rows_exact_duplicates": 6052,
+ "duplicates_by_label": {
+  "BENIGN": 6015,
+  "Web Attack - Brute Force": 37
+ },
+ "rows_zero_payload": 17602,
+ "zero_payload_by_label": {
+  "BENIGN": 15646,
+  "Web Attack - Brute Force": 1319,
+  "Web Attack - XSS": 628,
+  "Web Attack - Sql Injection": 9
+ },
+ "engelen_crosscheck": {
+  "Web Attack - Brute Force": {
+   "our_before": 1507,
+   "our_after": 151,
+   "engelen_before": 1507,
+   "engelen_after": 151,
+   "match": true
+  },
+  "Web Attack - XSS": {
+   "our_before": 652,
+   "our_after": 24,
+   "engelen_before": 652,
+   "engelen_after": 27,
+   "match": false
+  }
+ },
+ "rows_clean": 146314,
+ "cols_clean": 62,
+ "labels_clean": {
+  "BENIGN": 146127,
+  "Web Attack - Brute Force": 151,
+  "Web Attack - XSS": 24,
+  "Web Attack - Sql Injection": 12
+ },
+ "imbalance_raw": 77.1,
+ "imbalance_clean": 781.4
+}
