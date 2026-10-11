@@ -186,12 +186,14 @@ KL = ["baseline", "class_weight", "random_over", "smote", "borderline_smote", "a
 fig, ax = plt.subplots(figsize=(6.3, 3.4))
 m = [np.mean(grab(k, "lime", "vsi_jaccard5")) for k in KL]
 e = [np.std(grab(k, "lime", "vsi_jaccard5")) for k in KL]
-bars(ax, [LAB[k] for k in KL], m, e, ["//"] + [""] * 5,
+# VSI cannot exceed 1.0, so the upper error bar is capped at the maximum
+e_up = [min(sd, 1.0 - v) for v, sd in zip(m, e)]
+bars(ax, [LAB[k] for k in KL], m, [e, e_up], ["//"] + [""] * 5,
      [FILL_CTRL, FILL_ALT] + [FILL_MAIN] * 4)
 ax.set_ylabel("VSI: mean pairwise Jaccard@5\nacross 15 LIME runs")
 ax.set_ylim(0, 1.12)
 for i, v in enumerate(m):
-    ax.text(i, v + e[i] + .03, f"{v:.3f}", ha="center", fontsize=8.5)
+    ax.text(i, v + e_up[i] + .03, f"{v:.3f}", ha="center", fontsize=8.5)
 # bracket under the four resampling methods, below the tick labels
 import matplotlib.transforms as mtransforms
 tr = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
